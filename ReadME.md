@@ -220,7 +220,7 @@ tcpdump抓取数据包，首先需要创建socket，用于接纳发送或接收�
 
 步骤1.创建socket。tcpdump会创建出一个socket，名为PF_PACKET，用于接收L2层的网络包进行抓包分析，（复制了系统中的网络包）
 
-![image-20240519215036218](../image/image-20240519215036218.png)
+![image-20240519215036218](./image/image-20240519215036218.png)
 
 步骤2.挂载BPF程序。使用libpcap库的pcap_compile（）函数将用户制定的过滤策略转换为BPF代码，然后使用pcap_setfilter（）函数调用install_bpf_program()函数装载BPF程序，install_bpf_program()函数调用系统调用函数setsockopt()，设置SO_ATTACH_FILTER参数将BPF程序下发给内核底层，将规则注入到内核，设置过滤器，从而让规则生效。
 ![image-20240519215046616](./image/image-20240519215046616.png)
