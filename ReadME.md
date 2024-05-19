@@ -219,7 +219,7 @@ https://blog.csdn.net/weixin_43845924/article/details/138294080
 
 tcpdump是通过在用户态定义一些过滤规则，通过libpacp交给内核态的BPF。BPF利用这些规则将所有的网络包进行过滤，将满足规则的网络包传输至tcpdump
 
-![image-20240519210915183](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519210915183.png)
+![image-20240519210915183](./image/image-20240519210915183.png)
 
 其中，BPF（Berkeley Packet Filter）是类Unix系统上数据链路层的一种原始接口，供一种网络数据包过滤方法。随着技术的发展，人们在BPF的基础上又提出了eBPF（extended BPF）。经过重新设计，eBPF 演进为一个通用执行引擎，在不更改内核代码的前提下，实时获取和修改操作系统的行为，可基于此开发性能分析工具、软件定义网络等诸多场景,
 
@@ -234,7 +234,7 @@ Linux 内核只运行eBPF，内核会将加载的cBPF字节码透明地转换成
 - tcpdump使用的包过滤指令为cBPF,内核将提交上来的cBPF字节码转化为eBPF后，加载到BPF虚拟机中，使用setsockopt()将BPF程序挂载到socket套接字上面，进而过滤数据包
 - BPF代码是通过内核调用BPF运行函数__bpf_prog_run()来执行
 
-![image-20240519211735497](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519211735497.png)
+![image-20240519211735497](./image/image-20240519211735497.png)
 
 ##### 从内核层面来看整个tcpdump的抓包流程
 
@@ -244,7 +244,7 @@ Linux 内核只运行eBPF，内核会将加载的cBPF字节码透明地转换成
 
 tcpdump抓取数据包，首先需要创建socket，用于接纳发送或接收的数据包，然后将过滤条件（BPF程序）注入到内核网络设备层，获取过滤后的数据包，在格式化处理。
 
-![image-20240519214224555](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519214224555.png)
+![image-20240519214224555](./image/image-20240519214224555.png)
 
 其中注意两点内容：
 
@@ -253,17 +253,17 @@ tcpdump抓取数据包，首先需要创建socket，用于接纳发送或接收�
 
 步骤1.创建socket。tcpdump会创建出一个socket，名为PF_PACKET，用于接收L2层的网络包进行抓包分析，（复制了系统中的网络包）
 
-![image-20240519215036218](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519215036218.png)
+![image-20240519215036218](../image/image-20240519215036218.png)
 
 步骤2.挂载BPF程序。使用libpcap库的pcap_compile（）函数将用户制定的过滤策略转换为BPF代码，然后使用pcap_setfilter（）函数调用install_bpf_program()函数装载BPF程序，install_bpf_program()函数调用系统调用函数setsockopt()，设置SO_ATTACH_FILTER参数将BPF程序下发给内核底层，将规则注入到内核，设置过滤器，从而让规则生效。
-![image-20240519215046616](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519215046616.png)
+![image-20240519215046616](./image/image-20240519215046616.png)
 
 - 抓包分析
 - 应用接收报文时，在网络设备层，驱动程序首先调用内核函数netif_receive_skb()，通过deliver_skb()调用回调函数packet_rcv()，并使用BPF运行函数__bpf_prog_run()，来执行BPF程序过滤数据包，然后将数据包存入队列，最终复制数据包给tcpdump。而应用接收数据包则根据包的协议，选择udp或者tcp将报文送到用户进程。
-  ![image-20240519215219995](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519215219995.png)
+  ![image-20240519215219995](./image/image-20240519215219995.png)
 
 - 发送报文时
 
 应用在发送报文时，首先通过邻居子系统进入网络设备层，然后调用内核函数dev_hard_start_xmit（），该函数同样使用网络收包流程中使用的deliver_skb()函数调用回调函数packet_rcv()，并通过调用BPF运行函数__bpf_prog_run()，来执行BPF程序过滤数据包，然后将数据包存入队列，最终复制数据包给tcpdump。而应用发送数据包则通过驱动程序发送出去。
 应用在发送报文时，首先通过邻居子系统进入网络设备层，然后调用内核函数dev_hard_start_xmit（），该函数同样使用网络收包流程中使用的deliver_skb()函数调用回调函数packet_rcv()，并通过调用BPF运行函数__bpf_prog_run()，来执行BPF程序过滤数据包，然后将数据包存入队列，最终复制数据包给tcpdump。而应用发送数据包则通过驱动程序发送出去。
-![image-20240519215405719](C:\Users\13032\AppData\Roaming\Typora\typora-user-images\image-20240519215405719.png)
+![image-20240519215405719](./image/image-20240519215405719.png)
