@@ -274,6 +274,7 @@ tcpdump抓取数据包，首先需要创建socket，用于接纳发送或接收�
 
 应用在发送报文时，首先通过邻居子系统进入网络设备层，然后调用内核函数dev_hard_start_xmit（），该函数同样使用网络收包流程中使用的deliver_skb()函数调用回调函数packet_rcv()，并通过调用BPF运行函数__bpf_prog_run()，来执行BPF程序过滤数据包，然后将数据包存入队列，最终复制数据包给tcpdump。而应用发送数据包则通过驱动程序发送出去。
 应用在发送报文时，首先通过邻居子系统进入网络设备层，然后调用内核函数dev_hard_start_xmit（），该函数同样使用网络收包流程中使用的deliver_skb()函数调用回调函数packet_rcv()，并通过调用BPF运行函数__bpf_prog_run()，来执行BPF程序过滤数据包，然后将数据包存入队列，最终复制数据包给tcpdump。而应用发送数据包则通过驱动程序发送出去。
+<<<<<<< HEAD
 ![image-20240519215405719](./image/image-20240519215405719.png)
 
 #### 相关技术
@@ -302,3 +303,6 @@ error: externally-managed-environment
 https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-managed-environment-every-time-i-use-pip-3
 ```
 
+=======
+![image-20240519215405719](./image/image-20240519215405719.png)
+>>>>>>> 41d08ea417c35d945deb4b041bf2e04ce7c75ba2
