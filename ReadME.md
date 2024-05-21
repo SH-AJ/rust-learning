@@ -37,6 +37,31 @@ fn main(){
 }
 ```
 
+#### 元组
+
+元组可以包含各种类型的值的组合，使用（）来构造。
+
+```rust
+fn reverse(pair:(i32,bool))->(bool,i32){
+    let (integer,boolean) = pair;
+    (boolean,integer)
+}
+```
+
+```rust
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: u8,
+}
+
+fn main() {
+    let person = Person { name: "Alice".to_string(), age: 30 };
+    println!("{:?}", person); // 输出: Person { name: "Alice", age: 30 }
+}
+其中#[derive(Debug)]是创建结构体的功能
+```
+
 
 
 ### 自定义类型
@@ -178,7 +203,41 @@ archlinuxcn-keyring 包含了Arch Linux CN（中国）仓库的GPG密钥，
 当你尝试从Arch Linux CN仓库安装软件时，系统需要验证软件包的完整性和真实性，以确保它们没有被篡改。安装 archlinuxcn-keyring 就是为了将这些必需的GPG密钥添加到你的系统中，从而使得 pacman 能够验证来自该仓库的软件包签名。
 ```
 
+### 日常工具
 
+#### curl
+
+curl是请求服务器的指令，如果用的好可以替代掉postman
+
+##### get请求
+
+curl 不使用任何指令就是GET请求
+
+##### -A 指定客户端的用户代理标头，User-Agent
+
+就是用户的请求头
+
+##### -b参数向服务器发送cookie
+
+curl -b  'foo=bar'  https://google.com
+
+##### -v输出整个通信过程
+
+##### -u，"用户名:密码"
+
+##### --limit-rate 限制速度
+
+##### -L默认跟随重定向
+
+##### -k跳过SSL检测
+
+##### -F 向服务器上传二进制文件
+
+##### 发送数据体：--data-urlencde，等于-d
+
+```bash
+ curl --data-urlencode 'comment=hello world' https://google.com/login
+```
 
 ## 效率工具
 
