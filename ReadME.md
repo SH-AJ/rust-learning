@@ -365,3 +365,6 @@ https://stackoverflow.com/questions/75608323/how-do-i-solve-error-externally-man
 =======
 ![image-20240519215405719](./image/image-20240519215405719.png)
 >>>>>>> 41d08ea417c35d945deb4b041bf2e04ce7c75ba2
+
+
+
